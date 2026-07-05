@@ -1,6 +1,6 @@
 # Smart Campus AI Chatbot v3 — requirements
 # Install: pip install -r requirements.txt
-
+gunicorn
 # Core Flask
 Flask==2.3.3
 Werkzeug==2.3.7
