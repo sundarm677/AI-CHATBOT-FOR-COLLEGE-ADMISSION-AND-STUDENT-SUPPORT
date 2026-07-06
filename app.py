@@ -21,7 +21,7 @@ Frontend is UNCHANGED — all original templates preserved.
 from flask import (Flask, render_template, request, redirect,
                    url_for, session, flash, jsonify, Response)
 from werkzeug.security import generate_password_hash, check_password_hash
-from engine import get_response, get_response_for_device, extract_entities
+from engine import get_response, get_response_for_device, extract_entities, _predict_intent
 from otp_utils import generate_otp, send_otp_email, store_otp, verify_otp
 from response_formatter import (
     detect_device, format_response,
@@ -331,7 +331,7 @@ def add_user():
                  (name, email, generate_password_hash(pw), now()))
     conn.commit(); conn.close()
     flash('Account created! Please login.')
-    return redirect(url_for('login'))
+    return redirect(url_for('add_user'))
 
 @app.route('/logout')
 def logout():
@@ -411,6 +411,7 @@ def get_bot_response():
         return Response("⚠ Login required to use chatbot", status=403, content_type="text/plain; charset=utf-8")
         
     msg  = sanitise(request.args.get('msg', ''))
+    lang = session.get('lang', 'en')
 
     device = _get_device()
 
@@ -530,7 +531,6 @@ def api_chat():
         # ────────────────────────────────────────────────────────────
 
         # Detect intent for logging
-       from engine import _predict_intent
         intent, conf = _predict_intent(msg)
     except Exception as e:
         print(f"Backend Error (NLP/Formatting): {e}")
@@ -613,7 +613,7 @@ def api_translate():
     data = request.get_json(silent=True) or {}
     text = sanitise(data.get('text',''))
     dest = sanitise(data.get('dest','en'), 5)
-    translated = _translate(text, dest)
+    translated = _translate_from_english(text, dest)
     return jsonify({"original": text, "translated": translated, "lang": dest})
 
 # ══════════════════════════════════════════════════════════
