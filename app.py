@@ -21,7 +21,7 @@ Frontend is UNCHANGED — all original templates preserved.
 from flask import (Flask, render_template, request, redirect,
                    url_for, session, flash, jsonify, Response)
 from werkzeug.security import generate_password_hash, check_password_hash
-from chatbot.engine import get_response, get_response_for_device, extract_entities
+from engine import get_response, get_response_for_device, extract_entities
 from otp_utils import generate_otp, send_otp_email, store_otp, verify_otp
 from response_formatter import (
     detect_device, format_response,
@@ -530,7 +530,7 @@ def api_chat():
         # ────────────────────────────────────────────────────────────
 
         # Detect intent for logging
-        from chatbot.engine import _predict_intent
+       from engine import _predict_intent
         intent, conf = _predict_intent(msg)
     except Exception as e:
         print(f"Backend Error (NLP/Formatting): {e}")
