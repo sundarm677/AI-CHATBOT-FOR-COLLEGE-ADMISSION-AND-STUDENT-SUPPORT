@@ -1,14 +1,11 @@
 # Smart Campus AI Chatbot v3 — requirements
 # Install: pip install -r requirements.txt
-gunicorn
 Flask==3.1.0
 gunicorn==23.0.0
 google-generativeai
 python-dotenv
 requests
-# Core Flask
-Flask==2.3.3
-Werkzeug==2.3.7
+flask-compress==1.14
 
 # Response compression — reduces payload for mobile networks (optional but recommended)
 flask-compress==1.14
